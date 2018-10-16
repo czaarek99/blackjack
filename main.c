@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <mem.h>
+#include <time.h>
 
 enum card_suit {
     HEARTS, SPADES, CLUBS, DIAMONDS
@@ -55,6 +56,16 @@ void generate_deck(deck deck, int deck_count) {
     }
 }
 
+void shuffle_deck(deck deck, int deck_count) {
+    srand(time(NULL));
+    for(int i = 0; i < deck_count * CARDS_IN_DECK; i++) {
+        int swap_index = rand() % CARDS_IN_DECK;
+        struct card temp = deck[i];
+        deck[i] = deck[swap_index];
+        deck[swap_index] = temp;
+    }
+}
+
 int main() {
     const short input_size = 10;
     char input[input_size];
@@ -77,8 +88,9 @@ int main() {
         }
     }
 
-    deck deck= malloc(CARDS_IN_DECK * deck_count * sizeof(struct card));
+    deck deck = malloc(CARDS_IN_DECK * deck_count * sizeof(struct card));
     generate_deck(deck, deck_count);
+    shuffle_deck(deck, deck_count);
 
     return 0;
 }
