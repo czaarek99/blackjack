@@ -13,6 +13,8 @@ struct card {
     short value;
 };
 
+typedef struct card* deck;
+
 const int MAX_DECKS = 6;
 const int CARDS_IN_DECK = 52;
 
@@ -25,7 +27,7 @@ void get_input_discard_overflow(char *input, short input_size) {
     }
 }
 
-void generate_deck(struct card *deck, int deck_count) {
+void generate_deck(deck deck, int deck_count) {
     for (int deck_num = 0; deck_num < deck_count; deck_num++) {
         for (short card_value = 1; card_value < 14; card_value++) {
             struct card card_hearts;
@@ -75,7 +77,7 @@ int main() {
         }
     }
 
-    struct card *deck= malloc(CARDS_IN_DECK * deck_count * sizeof(struct card));
+    deck deck= malloc(CARDS_IN_DECK * deck_count * sizeof(struct card));
     generate_deck(deck, deck_count);
 
     return 0;
