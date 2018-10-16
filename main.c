@@ -25,7 +25,7 @@ void get_input_discard_overflow(char *input, short input_size) {
     }
 }
 
-void generate_decks(struct card *decks, int deck_count) {
+void generate_deck(struct card *deck, int deck_count) {
     for (int deck_num = 0; deck_num < deck_count; deck_num++) {
         for (short card_value = 1; card_value < 14; card_value++) {
             struct card card_hearts;
@@ -45,10 +45,10 @@ void generate_decks(struct card *decks, int deck_count) {
             card_diamonds.value = card_value;
 
             const int deck_index = deck_num * CARDS_IN_DECK + (card_value - 1) * 4;
-            decks[deck_index] = card_hearts;
-            decks[deck_index + 1] = card_spades;
-            decks[deck_index + 2] = card_clubs;
-            decks[deck_index + 3] = card_diamonds;
+            deck[deck_index] = card_hearts;
+            deck[deck_index + 1] = card_spades;
+            deck[deck_index + 2] = card_clubs;
+            deck[deck_index + 3] = card_diamonds;
         }
     }
 }
@@ -75,8 +75,8 @@ int main() {
         }
     }
 
-    struct card *decks = malloc(CARDS_IN_DECK * deck_count * sizeof(struct card));
-    generate_decks(decks, deck_count);
+    struct card *deck= malloc(CARDS_IN_DECK * deck_count * sizeof(struct card));
+    generate_deck(deck, deck_count);
 
     return 0;
 }
