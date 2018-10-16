@@ -1,6 +1,8 @@
 //TODO: Start with implementation then move on to ascii art in terminal
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include <mem.h>
 
 enum card_suit {
     HEARTS, SPADES, CLUBS, DIAMONDS
@@ -11,19 +13,70 @@ struct card {
     short value;
 };
 
+const int MAX_DECKS = 6;
+const int CARDS_IN_DECK = 52;
+
+void get_input_discard_overflow(char *input, short input_size) {
+    fgets(input, input_size, stdin);
+
+    if(strchr(input, '\n') == NULL) {
+        int ch;
+        while ((ch = fgetc(stdin)) != '\n' && ch != EOF);
+    }
+}
+
+void generate_decks(struct card *decks, int deck_count) {
+    for (int deck_num = 0; deck_num < deck_count; deck_num++) {
+        for (short card_value = 1; card_value < 14; card_value++) {
+            struct card card_hearts;
+            card_hearts.suit = HEARTS;
+            card_hearts.value = card_value;
+
+            struct card card_spades;
+            card_spades.suit = SPADES;
+            card_spades.value = card_value;
+
+            struct card card_clubs;
+            card_clubs.suit = CLUBS;
+            card_clubs.value = card_value;
+
+            struct card card_diamonds;
+            card_diamonds.suit = DIAMONDS;
+            card_diamonds.value = card_value;
+
+            const int deck_index = deck_num * CARDS_IN_DECK + (card_value - 1) * 4;
+            decks[deck_index] = card_hearts;
+            decks[deck_index + 1] = card_spades;
+            decks[deck_index + 2] = card_clubs;
+            decks[deck_index + 3] = card_diamonds;
+        }
+    }
+}
+
 int main() {
-    const short input_size = 3;
-    int deck_count;
+    const short input_size = 10;
     char input[input_size];
 
-    printf("Please enter how many decks you'd like to play with (max 6): ");
-    fgets(input, input_size, stdin);
-    int result = strtol(input, NULL, 10);
-    if(result == LONG_MAX || result == LONG_MIN || result == 0) {
-        perror("Invalid number.");
-    } else {
-        printf("%d", result);
+    setbuf(stdout, 0);
+    printf("Welcome to blackjack!\n");
+    printf("Please enter how many decks you'd like to play with (max %d):", MAX_DECKS);
+
+    bool hasDecks = false;
+    long deck_count = 0;
+    while (!hasDecks) {
+        get_input_discard_overflow(input, input_size);
+
+        deck_count = strtol(input, NULL, 10);
+        if (deck_count == LONG_MAX || deck_count == LONG_MIN || deck_count == 0 || deck_count > MAX_DECKS) {
+            printf("Please enter a valid number between 1 and %d", MAX_DECKS);
+        } else {
+            hasDecks = true;
+            printf("Starting blackjack with %lu decks", deck_count);
+        }
     }
-    
+
+    struct card *decks = malloc(CARDS_IN_DECK * deck_count * sizeof(struct card));
+    generate_decks(decks, deck_count);
+
     return 0;
 }
