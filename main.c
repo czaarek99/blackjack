@@ -73,6 +73,10 @@ void get_card_from_deck(deck source, int* source_deck_index,
     (*target_deck_index)++;
 }
 
+deck make_deck(int size) {
+    return malloc(size * sizeof(struct card));
+}
+
 int main() {
     const short input_size = 10;
     char input[input_size];
