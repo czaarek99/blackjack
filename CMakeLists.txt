@@ -3,4 +3,8 @@ project(blackjack C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(blackjack main.c)
+add_executable(blackjack
+        src/main.c
+        src/card.c src/card.h
+        src/deck.c src/deck.h
+        )
