@@ -19,6 +19,7 @@ typedef struct card* deck;
 const int MAX_DECKS = 6;
 const int CARDS_IN_DECK = 52;
 const int PLAYER_MAX_CARDS = 21;
+const int MAX_CARD_STRING_LENGTH = 4;
 
 void get_input_discard_overflow(char *input, short input_size) {
     fgets(input, input_size, stdin);
@@ -113,7 +114,7 @@ void card_to_string(struct card card, char* card_string) {
 
 void deck_to_string(deck deck, int deck_size, char* deck_string) {
     for(int i = 0; i < deck_size; i++) {
-        char card_string[3];
+        char card_string[MAX_CARD_STRING_LENGTH];
         struct card card = deck[i];
         card_to_string(card, card_string);
         strcat(deck_string, card_string);
