@@ -20,6 +20,7 @@ const int MAX_DECKS = 6;
 const int CARDS_IN_DECK = 52;
 const int PLAYER_MAX_CARDS = 21;
 const int MAX_CARD_STRING_LENGTH = 4;
+const int MAX_SCORE = 21;
 
 void get_input_discard_overflow(char *input, short input_size) {
     fgets(input, input_size, stdin);
