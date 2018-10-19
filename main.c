@@ -156,9 +156,75 @@ int main() {
         }
     }
 
-    deck deck = malloc(CARDS_IN_DECK * deck_count * sizeof(struct card));
-    generate_deck(deck, deck_count);
-    shuffle_deck(deck, deck_count);
+    deck game_deck = make_deck(CARDS_IN_DECK * deck_count);
+    generate_deck(game_deck, deck_count);
+    shuffle_deck(game_deck, deck_count);
+
+    int* game_deck_index = malloc(sizeof(int));
+    *game_deck_index = 0;
+
+    deck house_deck = make_deck(PLAYER_MAX_CARDS);
+    int* house_game_index = malloc(sizeof(int));
+    *house_game_index = 0;
+
+    deck player_deck = make_deck(PLAYER_MAX_CARDS);
+    int* player_deck_index = malloc(sizeof(int));
+    *player_deck_index = 0;
+
+    for(int i = 0; i < 2; i++) {
+        copy_card(game_deck, game_deck_index, house_deck, house_game_index);
+        copy_card(game_deck, game_deck_index, player_deck, player_deck_index);
+    }
+
+    int game_round = 0;
+    while(true) {
+        char* house_deck_string;
+        if(game_round == 0) {
+            house_deck_string = calloc(MAX_CARD_STRING_LENGTH + 3, 1);
+            struct card first_house_card = house_deck[0];
+            char first_card_string[MAX_CARD_STRING_LENGTH];
+            card_to_string(first_house_card, first_card_string);
+            strcpy(house_deck_string, first_card_string);
+            strcat(house_deck_string, " ?");
+        } else {
+            //+1 to account for spaces
+            house_deck_string = alloc_deck_string();
+            deck_to_string(house_deck, *house_game_index, house_deck_string);
+        }
+
+        printf("House hand: %s\n", house_deck_string);
+        free(house_deck_string);
+
+        char* player_deck_string = alloc_deck_string();
+        deck_to_string(player_deck, *player_deck_index, player_deck_string);
+
+        printf("Your hand: %s\n", player_deck_string);
+        free(player_deck_string);
+
+        printf("Enter 'h' for another card or 's' to stand:");
+
+
+        char input[3];
+        get_input_discard_overflow(input, 3);
+        char option = input[0];
+
+        fflush(stdout);
+        bool continueGame = false;
+        if(option == 'h') {
+            continueGame = true;
+            copy_card(game_deck, game_deck_index, player_deck, player_deck_index);
+        } else if(option == 's') {
+            continueGame = true;
+        } else {
+            break;
+        }
+
+        if(continueGame) {
+
+        }
+
+        game_round++;
+    }
 
     return 0;
 }
