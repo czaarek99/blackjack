@@ -227,29 +227,37 @@ int main() {
         char* player_deck_string = alloc_deck_string();
         deck_to_string(player_deck, *player_deck_index, player_deck_string);
 
-        printf("Your hand: %s\n", player_deck_string);
+        struct deck_score score = get_deck_score(player_deck, *player_deck_index);
+
+        char* score_string = calloc(20, 1);
+        if(score.score == score.alt_score || score.alt_score > MAX_SCORE) {
+            itoa(score.score, score_string, 10);
+        } else {
+            itoa(score.score, score_string, 10);
+            char alt_score_string[3];
+            itoa(score.alt_score, alt_score_string, 10);
+            strcat(score_string, " or ");
+            strcat(score_string, alt_score_string);
+        }
+
+        printf("Your hand is: %swith a score of: %s\n", player_deck_string, score_string);
         free(player_deck_string);
+        free(score_string);
+
+        if(score.score > MAX_SCORE && score.alt_score > MAX_SCORE) {
+            printf("Your score exceeded %i therefore you lose!", MAX_SCORE);
+            break;
+        }
 
         printf("Enter 'h' for another card or 's' to stand:");
-
 
         char input[3];
         get_input_discard_overflow(input, 3);
         char option = input[0];
 
         fflush(stdout);
-        bool continueGame = false;
         if(option == 'h') {
-            continueGame = true;
             copy_card(game_deck, game_deck_index, player_deck, player_deck_index);
-        } else if(option == 's') {
-            continueGame = true;
-        } else {
-            break;
-        }
-
-        if(continueGame) {
-
         }
 
         game_round++;
