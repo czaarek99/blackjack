@@ -88,7 +88,8 @@ void card_to_string(struct card card, char* card_string) {
         itoa(card.value, card_string, 10);
     } else if(card.value == 10) {
         len = 3;
-        card_string = "10?";
+        card_string[0] = '1';
+        card_string[1] = '0';
     } else if(card.value == 11) {
         card_string[0] = 'J';
     } else if(card.value == 12) {
