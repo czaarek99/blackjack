@@ -146,7 +146,7 @@ int main() {
             printf("Please enter a valid number between 1 and %d", MAX_DECKS);
         } else {
             hasDecks = true;
-            printf("Starting blackjack with %lu decks", deck_count);
+            printf("Starting blackjack with %lu decks\n", deck_count);
         }
     }
 
