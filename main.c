@@ -111,6 +111,16 @@ void card_to_string(struct card card, char* card_string) {
     card_string[suit_index+1] = '\0';
 }
 
+void deck_to_string(deck deck, int deck_size, char* deck_string) {
+    for(int i = 0; i < deck_size; i++) {
+        char card_string[3];
+        struct card card = deck[i];
+        card_to_string(card, card_string);
+        strcat(deck_string, card_string);
+        strcat(deck_string, " ");
+    }
+}
+
 deck make_deck(int size) {
     return malloc(size * sizeof(struct card));
 }
