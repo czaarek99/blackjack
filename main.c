@@ -67,8 +67,8 @@ void shuffle_deck(deck deck, int deck_count) {
     }
 }
 
-void get_card_from_deck(deck source, int* source_deck_index,
-        deck target, int* target_deck_index) {
+void copy_card(deck source, int *source_deck_index,
+               deck target, int *target_deck_index) {
     target[*target_deck_index] = source[*source_deck_index];
     (*source_deck_index)++;
     (*target_deck_index)++;
