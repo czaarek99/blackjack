@@ -204,6 +204,8 @@ int main() {
 
     int game_round = 0;
     while(true) {
+        printf("-----\n");
+
         char* house_deck_string;
         if(game_round == 0) {
             house_deck_string = calloc(MAX_CARD_STRING_LENGTH + 3, 1);
