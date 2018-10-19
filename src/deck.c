@@ -86,3 +86,10 @@ void deck_to_string(deck deck, int deck_size, char* deck_string) {
         strcat(deck_string, " ");
     }
 }
+
+void copy_card_between_decks(deck source, int *source_deck_index,
+                             deck target, int *target_deck_index) {
+    target[*target_deck_index] = source[*source_deck_index];
+    (*source_deck_index)++;
+    (*target_deck_index)++;
+}

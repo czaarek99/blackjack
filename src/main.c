@@ -16,13 +16,6 @@ void get_input_discard_overflow(char *input, short input_size) {
     }
 }
 
-void copy_card(deck source, int *source_deck_index,
-               deck target, int *target_deck_index) {
-    target[*target_deck_index] = source[*source_deck_index];
-    (*source_deck_index)++;
-    (*target_deck_index)++;
-}
-
 int main() {
     const short input_size = 10;
     char input[input_size];
@@ -61,8 +54,8 @@ int main() {
     *player_deck_index = 0;
 
     for(int i = 0; i < 2; i++) {
-        copy_card(game_deck, game_deck_index, house_deck, house_game_index);
-        copy_card(game_deck, game_deck_index, player_deck, player_deck_index);
+        copy_card_between_decks(game_deck, game_deck_index, house_deck, house_game_index);
+        copy_card_between_decks(game_deck, game_deck_index, player_deck, player_deck_index);
     }
 
     int game_round = 0;
@@ -119,7 +112,7 @@ int main() {
 
         fflush(stdout);
         if(option == 'h') {
-            copy_card(game_deck, game_deck_index, player_deck, player_deck_index);
+            copy_card_between_decks(game_deck, game_deck_index, player_deck, player_deck_index);
         }
 
         game_round++;
