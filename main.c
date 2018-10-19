@@ -176,7 +176,7 @@ int main() {
 
         deck_count = strtol(input, NULL, 10);
         if (deck_count == LONG_MAX || deck_count == LONG_MIN || deck_count == 0 || deck_count > MAX_DECKS) {
-            printf("Please enter a valid number between 1 and %d", MAX_DECKS);
+            printf("Please enter a valid number between 1 and %d:", MAX_DECKS);
         } else {
             hasDecks = true;
             printf("Starting blackjack with %lu decks\n", deck_count);
