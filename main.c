@@ -114,6 +114,7 @@ void card_to_string(struct card card, char* card_string) {
 }
 
 void deck_to_string(deck deck, int deck_size, char* deck_string) {
+    strcpy(deck_string, "");
     for(int i = 0; i < deck_size; i++) {
         char card_string[MAX_CARD_STRING_LENGTH];
         struct card card = deck[i];
