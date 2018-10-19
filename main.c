@@ -126,6 +126,32 @@ void deck_to_string(deck deck, int deck_size, char* deck_string) {
     }
 }
 
+struct deck_score {
+    int score;
+    int alt_score;
+};
+
+const int CARD_ACE = 1;
+
+struct deck_score get_deck_score(deck deck, int deck_size) {
+    struct deck_score score;
+    score.score = 0;
+    score.alt_score = 0;
+
+    for(int i = 0; i < deck_size; i++) {
+        struct card card = deck[i];
+        if(card.value == CARD_ACE) {
+            score.score += 1;
+            score.alt_score += 14;
+        } else {
+            score.score += card.value;
+            score.alt_score += card.value;
+        }
+    }
+
+    return score;
+}
+
 deck make_deck(int size) {
     return malloc(size * sizeof(struct card));
 }
