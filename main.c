@@ -130,6 +130,10 @@ deck make_deck(int size) {
     return malloc(size * sizeof(struct card));
 }
 
+char* alloc_deck_string() {
+    return calloc((MAX_CARD_STRING_LENGTH + 1) * PLAYER_MAX_CARDS, 1);
+}
+
 int main() {
     const short input_size = 10;
     char input[input_size];
