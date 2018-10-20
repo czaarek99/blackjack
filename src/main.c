@@ -57,7 +57,7 @@ bool verify_bet(char *input, void *verified_input,
                 void *verification_data) {
     int *max_bet = (int *) verification_data;
     long bet = strtol(input, NULL, 10);
-    if (bet != LONG_MAX && bet != LONG_MIN && bet != 0 && bet <= *max_bet) {
+    if (bet != LONG_MAX && bet != LONG_MIN && bet > 0 && bet <= *max_bet) {
         *(int *) (verified_input) = bet;
         return true;
     } else {
