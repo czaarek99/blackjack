@@ -30,3 +30,27 @@ void require_input(void* input, short text_input_size,
         }
     }
 }
+
+bool verify_single_letter_action(char *allowed,
+        char *chosen,
+        void* verified_input) {
+
+    for(int i = 0; i < strlen(allowed); i++) {
+        if(allowed[i] == chosen[0]) {
+            ((char*) verified_input)[0] = chosen[0];
+            return true;
+        }
+    }
+
+    return false;
+}
+
+char require_single_letter_input(verify_input_func verify_func,
+        on_bad_input_func bad_input_func,
+        on_good_input_func good_input_func) {
+    char* input = malloc(1);
+    require_input(input, 3, verify_func, NULL, bad_input_func, good_input_func);
+    char input_char = input[0];
+    free(input);
+    return input_char;
+}
