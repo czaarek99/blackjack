@@ -61,6 +61,27 @@ void on_game_action_good_input(void *good_input) {
     }
 }
 
+bool verify_bet(char *input, void *verified_input,
+                void *verification_data) {
+    int *max_bet = (int *) verification_data;
+    long bet = strtol(input, NULL, 10);
+    if (bet != LONG_MAX && bet != LONG_MIN && bet != 0 && bet <= *max_bet) {
+        *(int *) (verified_input) = bet;
+        return true;
+    } else {
+        return false;
+    }
+}
+
+void on_bet_bad_input(char *bad_input) {
+    printf("Please enter a valid bet: ");
+}
+
+void on_bet_good_input(void *good_input) {
+    int *bet = (int *) good_input;
+    printf("Betting %i$\n", *bet);
+}
+
 void play_hand(long deck_count, int *player_money) {
     deck game_deck = make_deck(CARDS_IN_DECK * deck_count);
     generate_deck(game_deck, deck_count);
@@ -81,6 +102,12 @@ void play_hand(long deck_count, int *player_money) {
         copy_card_between_decks(game_deck, game_deck_index, house_deck, house_game_index);
         copy_card_between_decks(game_deck, game_deck_index, player_deck, player_deck_index);
     }
+
+    printf("Please enter a bet between 1 and %i:", *player_money);
+
+    int *player_bet = malloc(sizeof(int));
+    require_input(player_bet, 10, &verify_bet, player_money,
+                  &on_bet_bad_input, &on_bet_good_input);
 
     enum game_state state = PLAYERS_TURN;
     while (state != FINISH) {
@@ -161,6 +188,8 @@ void play_hand(long deck_count, int *player_money) {
             free(game_action);
         }
     }
+
+    free(player_bet);
 }
 
 int main() {
