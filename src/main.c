@@ -37,6 +37,28 @@ void on_deck_good_input(void* good_input) {
     printf("Starting blackjack with %lu decks\n", deck_count);
 }
 
+bool verify_game_action(char* input, void* verified_input) {
+    if(input[0] == 'h' || input[0] == 's') {
+        ((char*) verified_input)[0] = input[0];
+        return true;
+    } else {
+        return false;
+    }
+}
+
+void on_game_action_bad_input(char* bad_input) {
+    printf("Please enter either 'h' to hit or 's' to stand:");
+}
+
+void on_game_action_good_input(void* good_input) {
+    char good_input_char = ((char*)(good_input))[0];
+    if(good_input_char == 'h') {
+        printf("Hit! Giving you another card.\n");
+    } else if(good_input_char == 's') {
+        printf("Stand. Giving it up for the dealer\n");
+    }
+}
+
 int main() {
     setbuf(stdout, 0);
     printf("Welcome to blackjack!\n");
@@ -133,13 +155,13 @@ int main() {
 
             printf("Enter 'h' for another card or 's' to stand:");
 
-            char input[3];
-            get_input_discard_overflow(input, 3);
-            char option = input[0];
+            char* game_action = malloc(1);
+            require_input(game_action, 4, &verify_game_action,
+                    &on_game_action_bad_input, &on_game_action_good_input);
 
-            if (option == 'h') {
+            if (game_action[0] == 'h') {
                 copy_card_between_decks(game_deck, game_deck_index, player_deck, player_deck_index);
-            } else if (option == 's') {
+            } else if (game_action[0] == 's') {
                 state = HOUSE_TURN;
             }
         } else if(state == FINISH) {
