@@ -232,7 +232,8 @@ int main() {
         printf("Enter 'q' to quit or 'p' to continue the game:");
 
         char char_input = require_single_letter_input(&verify_continue_game,
-                                                      &on_continue_game_bad_input, &on_continue_game_good_input);
+                                                      &on_continue_game_bad_input,
+                                                      &on_continue_game_good_input);
         if (char_input == 'q') {
             printf("This games profit: %i$", *player_money - START_MONEY);
             break;
