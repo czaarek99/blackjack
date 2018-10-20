@@ -127,7 +127,7 @@ int main() {
                 printf("Your score exceeded %i therefore you lose!", BLACKJACK);
                 break;
             } else if(house_has_blackjack && !player_has_blackjack) {
-                printf("House has blackjack and you don't! You lose!\n");
+                printf("Dealer has blackjack and you don't! You lose!\n");
                 break;
             }
 
