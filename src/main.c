@@ -10,7 +10,7 @@ const int MAX_SCORE = 21;
 void get_input_discard_overflow(char *input, short input_size) {
     fgets(input, input_size, stdin);
 
-    if(strchr(input, '\n') == NULL) {
+    if (strchr(input, '\n') == NULL) {
         int ch;
         while ((ch = fgetc(stdin)) != '\n' && ch != EOF);
     }
