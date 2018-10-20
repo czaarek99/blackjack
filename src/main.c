@@ -10,7 +10,7 @@ const int DEALER_MAX_DRAW_SCORE = 17;
 const int START_MONEY = 200;
 
 enum game_state {
-    PLAYERS_TURN, HOUSE_TURN, FINISH
+    PLAYER_TURN, HOUSE_TURN, FINISH
 };
 
 bool should_house_hit(struct deck_score score) {
@@ -103,7 +103,7 @@ void play_hand(long deck_count, int *player_money) {
 
     *player_money -= *player_bet;
 
-    enum game_state state = PLAYERS_TURN;
+    enum game_state state = PLAYER_TURN;
     while (state != FINISH) {
         printf("-----\n");
         bool house_turn = state == HOUSE_TURN;
@@ -155,7 +155,7 @@ void play_hand(long deck_count, int *player_money) {
 
         bool player_has_blackjack = has_blackjack(player_deck_score);
 
-        if (state == PLAYERS_TURN) {
+        if (state == PLAYER_TURN) {
             if (player_deck_score.score > BLACKJACK && player_deck_score.alt_score > BLACKJACK) {
                 printf("Your score exceeded %i therefore you lose!\n", BLACKJACK);
                 state = FINISH;
