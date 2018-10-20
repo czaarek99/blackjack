@@ -157,7 +157,7 @@ void play_hand(long deck_count, int *player_money) {
 
         if (state == PLAYERS_TURN) {
             if (player_deck_score.score > BLACKJACK && player_deck_score.alt_score > BLACKJACK) {
-                printf("Your score exceeded %i therefore you lose!", BLACKJACK);
+                printf("Your score exceeded %i therefore you lose!\n", BLACKJACK);
                 break;
             } else if (house_has_blackjack && !player_has_blackjack) {
                 printf("Dealer has blackjack and you don't! You lose!\n");
