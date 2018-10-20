@@ -167,13 +167,12 @@ void play_hand(long deck_count, int *player_money) {
 
             printf("Enter 'h' for another card or 's' to stand:");
 
-            char *game_action = malloc(1);
-            require_input(game_action, 4, &verify_game_action, NULL,
-                          &on_game_action_bad_input, &on_game_action_good_input);
+            char game_action = require_single_letter_input(&verify_game_action,
+                    &on_game_action_bad_input, &on_game_action_good_input);
 
-            if (game_action[0] == 'h') {
+            if (game_action == 'h') {
                 copy_card_between_decks(game_deck, game_deck_index, player_deck, player_deck_index);
-            } else if (game_action[0] == 's') {
+            } else if (game_action == 's') {
                 state = HOUSE_TURN;
             }
 
