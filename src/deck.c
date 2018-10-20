@@ -5,6 +5,7 @@
 
 const int CARDS_IN_DECK = 52;
 const int PLAYER_MAX_CARDS = 21;
+const int BLACKJACK = 21;
 
 void generate_deck(deck deck, int deck_count) {
     for (int deck_num = 0; deck_num < deck_count; deck_num++) {
@@ -95,4 +96,8 @@ void copy_card_between_decks(deck source, int *source_deck_index,
     target[*target_deck_index] = source[*source_deck_index];
     (*source_deck_index)++;
     (*target_deck_index)++;
+}
+
+bool has_blackjack(struct deck_score score) {
+    return score.score == BLACKJACK || score.alt_score == BLACKJACK;
 }
