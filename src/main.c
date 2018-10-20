@@ -164,6 +164,8 @@ int main() {
             } else if (game_action[0] == 's') {
                 state = HOUSE_TURN;
             }
+
+            free(game_action);
         } else if(state == FINISH) {
             break;
         }
