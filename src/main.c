@@ -61,7 +61,7 @@ void on_game_action_good_input(void *good_input) {
     }
 }
 
-void play_hand(long deck_count) {
+void play_hand(long deck_count, int *player_money) {
     deck game_deck = make_deck(CARDS_IN_DECK * deck_count);
     generate_deck(game_deck, deck_count);
     shuffle_deck(game_deck, deck_count);
@@ -172,8 +172,12 @@ int main() {
     require_input(deck_count, 10, &verify_deck_count, NULL,
                   &on_deck_bad_input, &on_deck_good_input);
 
-    play_hand(*deck_count);
+    int *player_money = malloc(sizeof(int));
+    *player_money = START_MONEY;
+
+    play_hand(*deck_count, player_money);
     free(deck_count);
+    free(player_money);
 
     return 0;
 }
