@@ -92,7 +92,7 @@ int main() {
     }
 
     enum game_state state = PLAYERS_TURN;
-    while (true) {
+    while (state != FINISH) {
         printf("-----\n");
         bool house_turn = state == HOUSE_TURN;
 
@@ -168,8 +168,6 @@ int main() {
             }
 
             free(game_action);
-        } else if(state == FINISH) {
-            break;
         }
     }
 
