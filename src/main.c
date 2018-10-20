@@ -67,7 +67,7 @@ int main() {
     printf("Please enter how many decks you'd like to play with (max %i):", MAX_DECKS);
 
     long* deck_count = malloc(sizeof(int));
-    require_input(deck_count, 10, NULL, &verify_deck_count,
+    require_input(deck_count, 10, &verify_deck_count, NULL,
             &on_deck_bad_input, &on_deck_good_input);
 
     deck game_deck = make_deck(CARDS_IN_DECK * *deck_count);
