@@ -1,5 +1,6 @@
 //TODO: deck randomization is very bad. Fix that
 #include "deck.h"
+#include "util.h"
 #include <time.h>
 #include <stdlib.h>
 #include <mem.h>
@@ -69,6 +70,15 @@ struct deck_score get_deck_score(deck deck, int deck_size) {
     return score;
 }
 
+int get_deck_best_score(deck deck, int deck_size) {
+    struct deck_score score = get_deck_score(deck, deck_size);
+    if(score.score > BLACKJACK || score.alt_score > BLACKJACK) {
+        return score.score;
+    } else {
+        return MAX(score.score, score.alt_score);
+    }
+}
+
 deck make_deck(int size) {
     return malloc(size * sizeof(struct card));
 }
@@ -101,4 +111,21 @@ void copy_card_between_decks(deck source, int *source_deck_index,
 
 bool has_blackjack(struct deck_score score) {
     return score.score == BLACKJACK || score.alt_score == BLACKJACK;
+}
+
+enum better_deck compare_decks(deck deck1, int deck1_size, deck deck2, int deck2_size) {
+    int score1 = get_deck_best_score(deck1, deck1_size);
+    int score2 = get_deck_best_score(deck2, deck2_size);
+
+    if(score1 > BLACKJACK) {
+        return SECOND;
+    } else if(score2 > BLACKJACK) {
+        return FIRST;
+    } else if(score1 == score2) {
+        return NONE;
+    } else if(score1 > score2){
+        return FIRST;
+    } else {
+        return SECOND;
+    }
 }
