@@ -74,6 +74,7 @@ int main() {
 
         struct deck_score house_deck_score = get_deck_score(house_deck, *house_game_index);
         while (house_turn && should_house_hit(house_deck_score)) {
+            printf("Dealer is drawing...\n");
             copy_card_between_decks(game_deck, game_deck_index, house_deck, house_game_index);
             house_deck_score = get_deck_score(house_deck, *house_game_index);
         }
