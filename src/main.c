@@ -13,6 +13,19 @@ enum game_state {
     PLAYERS_TURN, HOUSE_TURN, FINISH
 };
 
+bool verify_single_letter_action(char *allowed, char *chosen,
+        void* verified_input) {
+
+    for(int i = 0; i < strlen(allowed); i++) {
+        if(allowed[i] == chosen[0]) {
+            ((char*) verified_input)[0] = chosen[0];
+            return true;
+        }
+    }
+
+    return false;
+}
+
 bool should_house_hit(struct deck_score score) {
     bool draw_on_alt_score = score.score > BLACKJACK && score.score < DEALER_MAX_DRAW_SCORE;
     return score.score < DEALER_MAX_DRAW_SCORE || draw_on_alt_score;
