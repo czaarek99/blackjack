@@ -80,7 +80,8 @@ int main() {
         }
 
         char *house_deck_string;
-        if (house_turn || has_blackjack(house_deck_score)) {
+        bool house_has_blackjack = has_blackjack(house_deck_score);
+        if (house_turn || house_has_blackjack) {
             house_deck_string = alloc_deck_string();
             deck_to_string(house_deck, *house_game_index, house_deck_string);
         } else {
@@ -120,10 +121,13 @@ int main() {
         free(player_deck_string);
         free(score_string);
 
-
         if (state == PLAYERS_TURN) {
+            bool player_has_blackjack = has_blackjack(player_deck_score);
             if (player_deck_score.score > BLACKJACK && player_deck_score.alt_score > BLACKJACK) {
                 printf("Your score exceeded %i therefore you lose!", BLACKJACK);
+                break;
+            } else if(house_has_blackjack && !player_has_blackjack) {
+                printf("House has blackjack and you don't! You lose!\n");
                 break;
             }
 
