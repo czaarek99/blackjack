@@ -7,7 +7,6 @@
         return verify_single_letter_action((LETTERS), input, verified_input); \
     } \
 
-
 typedef bool (*verify_input_func)(char*, void*, void*);
 typedef void (*on_bad_input_func)(char*);
 typedef void (*on_good_input_func)(void*);
