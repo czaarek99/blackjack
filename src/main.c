@@ -42,7 +42,7 @@ int main() {
     printf("Welcome to blackjack!\n");
     printf("Please enter how many decks you'd like to play with (max %d):", MAX_DECKS);
 
-    int* deck_count = malloc(sizeof(int));
+    long* deck_count = malloc(sizeof(int));
     require_input(deck_count, 10, &verify_deck_count,
             &on_deck_bad_input, &on_deck_good_input);
 
