@@ -177,7 +177,9 @@ void play_hand(long deck_count, int *player_money) {
             }
         } else if (house_turn) {
             enum better_deck winner = compare_decks(house_deck,
-                                                    *house_game_index, player_deck, *player_deck_index);
+                                                    *house_game_index,
+                                                    player_deck,
+                                                    *player_deck_index);
             if (winner == FIRST) {
                 printf("House has better hand. You lose!\n");
             } else if (winner == SECOND) {
