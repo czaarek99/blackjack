@@ -28,12 +28,16 @@ void card_to_string(struct card card, char* card_string) {
     switch(card.suit) {
         case HEARTS:
             card_string[suit_index] = 'H';
+            break;
         case SPADES:
             card_string[suit_index] = 'S';
+            break;
         case CLUBS:
             card_string[suit_index] = 'C';
+            break;
         case DIAMONDS:
             card_string[suit_index] = 'D';
+            break;
     }
 
     card_string[suit_index+1] = '\0';
