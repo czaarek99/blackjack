@@ -25,23 +25,24 @@ bool should_house_hit(struct deck_score score) {
     return score.score < DEALER_MAX_DRAW_SCORE || draw_on_alt_score;
 }
 
-typedef void (*verify_input_func)(char*, void*);
-typedef void (*on_good_input_func)(void*);
+typedef bool (*verify_input_func)(char*, void*);
 typedef void (*on_bad_input_func)(char*);
+typedef void (*on_good_input_func)(void*);
+
 void require_input(void* input, short input_size,
         verify_input_func verify_func,
-        on_good_input_func good_input_func,
-        on_bad_input_func bad_input_func) {
+        on_bad_input_func bad_input_func,
+        on_good_input_func good_input_func) {
 
     while(true) {
         char* text_input = calloc(input_size, 1);
         get_input_discard_overflow(text_input, input_size);
-        (*verify_func)(text_input, input);
-        if(input == NULL) {
-            (*bad_input_func)(text_input);
-        } else {
+        bool verified = (*verify_func)(text_input, input);
+        if(verified) {
             (*good_input_func)(input);
             break;
+        } else {
+            (*bad_input_func)(text_input);
         }
     }
 }
