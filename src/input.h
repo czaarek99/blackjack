@@ -8,7 +8,7 @@ typedef void (*on_good_input_func)(void*);
 
 
 void get_input_discard_overflow(char *input, short input_size);
-void require_input(void* input, short input_size,
+void require_input(void* input, short text_input_size,
         verify_input_func verify_func,
         on_bad_input_func bad_input_func,
         on_good_input_func good_input_func);
