@@ -86,10 +86,6 @@ char* alloc_deck_string() {
     return calloc((MAX_CARD_STRING_LENGTH + 1) * PLAYER_MAX_CARDS, 1);
 }
 
-struct card get_card_from_deck(deck deck, int* deck_index) {
-    return deck[*deck_index];
-}
-
 void deck_to_string(deck deck, int deck_size, char* deck_string) {
     strcpy(deck_string, "");
     for(int i = 0; i < deck_size; i++) {
