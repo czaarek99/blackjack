@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <mem.h>
 #include "deck.h"
+#include "input.h"
 
 const int MAX_DECKS = 6;
 const int DEALER_MAX_DRAW_SCORE = 17;
@@ -11,40 +12,10 @@ enum game_state {
     PLAYERS_TURN, HOUSE_TURN, FINISH
 };
 
-void get_input_discard_overflow(char *input, short input_size) {
-    fgets(input, input_size, stdin);
-
-    if (strchr(input, '\n') == NULL) {
-        int ch;
-        while ((ch = fgetc(stdin)) != '\n' && ch != EOF);
-    }
-}
 
 bool should_house_hit(struct deck_score score) {
     bool draw_on_alt_score = score.score > BLACKJACK && score.score < DEALER_MAX_DRAW_SCORE;
     return score.score < DEALER_MAX_DRAW_SCORE || draw_on_alt_score;
-}
-
-typedef bool (*verify_input_func)(char*, void*);
-typedef void (*on_bad_input_func)(char*);
-typedef void (*on_good_input_func)(void*);
-
-void require_input(void* input, short input_size,
-        verify_input_func verify_func,
-        on_bad_input_func bad_input_func,
-        on_good_input_func good_input_func) {
-
-    while(true) {
-        char* text_input = calloc(input_size, 1);
-        get_input_discard_overflow(text_input, input_size);
-        bool verified = (*verify_func)(text_input, input);
-        if(verified) {
-            (*good_input_func)(input);
-            break;
-        } else {
-            (*bad_input_func)(text_input);
-        }
-    }
 }
 
 bool verify_deck_count(char* input, void* verified_input) {

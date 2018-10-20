@@ -7,4 +7,5 @@ add_executable(blackjack
         src/main.c
         src/card.c src/card.h
         src/deck.c src/deck.h
+        src/input.c src/input.h
         )
