@@ -53,12 +53,7 @@ void on_deck_good_input(void *good_input) {
 
 bool verify_game_action(char *input, void *verified_input,
                         void *verification_data) {
-    if (input[0] == 'h' || input[0] == 's') {
-        ((char *) verified_input)[0] = input[0];
-        return true;
-    } else {
-        return false;
-    }
+    return verify_single_letter_action("hs", input, verified_input);
 }
 
 void on_game_action_bad_input(char *bad_input) {
