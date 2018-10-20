@@ -61,19 +61,10 @@ void on_game_action_good_input(void *good_input) {
     }
 }
 
-int main() {
-    setbuf(stdout, 0);
-    printf("Welcome to blackjack!\nYou start with $%i.\n", START_MONEY);
-    printf("Please enter how many decks you'd like to play with (max %i):", MAX_DECKS);
-
-    long* deck_count = malloc(sizeof(int));
-    require_input(deck_count, 10, &verify_deck_count, NULL,
-            &on_deck_bad_input, &on_deck_good_input);
-
-    deck game_deck = make_deck(CARDS_IN_DECK * *deck_count);
-    generate_deck(game_deck, *deck_count);
-    shuffle_deck(game_deck, *deck_count);
-    free(deck_count);
+void play_hand(long deck_count) {
+    deck game_deck = make_deck(CARDS_IN_DECK * deck_count);
+    generate_deck(game_deck, deck_count);
+    shuffle_deck(game_deck, deck_count);
 
     int *game_deck_index = malloc(sizeof(int));
     *game_deck_index = 0;
@@ -150,16 +141,16 @@ int main() {
             if (player_deck_score.score > BLACKJACK && player_deck_score.alt_score > BLACKJACK) {
                 printf("Your score exceeded %i therefore you lose!", BLACKJACK);
                 break;
-            } else if(house_has_blackjack && !player_has_blackjack) {
+            } else if (house_has_blackjack && !player_has_blackjack) {
                 printf("Dealer has blackjack and you don't! You lose!\n");
                 break;
             }
 
             printf("Enter 'h' for another card or 's' to stand:");
 
-            char* game_action = malloc(1);
+            char *game_action = malloc(1);
             require_input(game_action, 4, &verify_game_action, NULL,
-                    &on_game_action_bad_input, &on_game_action_good_input);
+                          &on_game_action_bad_input, &on_game_action_good_input);
 
             if (game_action[0] == 'h') {
                 copy_card_between_decks(game_deck, game_deck_index, player_deck, player_deck_index);
@@ -170,6 +161,19 @@ int main() {
             free(game_action);
         }
     }
+}
+
+int main() {
+    setbuf(stdout, 0);
+    printf("Welcome to blackjack!\nYou start with $%i.\n", START_MONEY);
+    printf("Please enter how many decks you'd like to play with (max %i):", MAX_DECKS);
+
+    long *deck_count = malloc(sizeof(int));
+    require_input(deck_count, 10, &verify_deck_count, NULL,
+                  &on_deck_bad_input, &on_deck_good_input);
+
+    play_hand(*deck_count);
+    free(deck_count);
 
     return 0;
 }
