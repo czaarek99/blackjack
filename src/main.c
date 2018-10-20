@@ -5,7 +5,11 @@
 #include "deck.h"
 
 const int MAX_DECKS = 6;
-const int MAX_SCORE = 21;
+const int DEALER_MAX_DRAW_SCORE = 17;
+
+enum game_state {
+    PLAYERS_TURN, HOUSE_TURN, FINISH
+};
 
 void get_input_discard_overflow(char *input, short input_size) {
     fgets(input, input_size, stdin);
@@ -14,6 +18,11 @@ void get_input_discard_overflow(char *input, short input_size) {
         int ch;
         while ((ch = fgetc(stdin)) != '\n' && ch != EOF);
     }
+}
+
+bool should_house_hit(struct deck_score score) {
+    bool draw_on_alt_score = score.score > BLACKJACK && score.score < DEALER_MAX_DRAW_SCORE;
+    return score.score < DEALER_MAX_DRAW_SCORE || draw_on_alt_score;
 }
 
 int main() {
@@ -42,55 +51,66 @@ int main() {
     generate_deck(game_deck, deck_count);
     shuffle_deck(game_deck, deck_count);
 
-    int* game_deck_index = malloc(sizeof(int));
+    int *game_deck_index = malloc(sizeof(int));
     *game_deck_index = 0;
 
     deck house_deck = make_deck(PLAYER_MAX_CARDS);
-    int* house_game_index = malloc(sizeof(int));
+    int *house_game_index = malloc(sizeof(int));
     *house_game_index = 0;
 
     deck player_deck = make_deck(PLAYER_MAX_CARDS);
-    int* player_deck_index = malloc(sizeof(int));
+    int *player_deck_index = malloc(sizeof(int));
     *player_deck_index = 0;
 
-    for(int i = 0; i < 2; i++) {
+    for (int i = 0; i < 2; i++) {
         copy_card_between_decks(game_deck, game_deck_index, house_deck, house_game_index);
         copy_card_between_decks(game_deck, game_deck_index, player_deck, player_deck_index);
     }
 
-    int game_round = 0;
-    while(true) {
+    enum game_state state = PLAYERS_TURN;
+    while (true) {
         printf("-----\n");
+        bool house_turn = state == HOUSE_TURN;
 
-        char* house_deck_string;
-        if(game_round == 0) {
+        struct deck_score house_deck_score = get_deck_score(house_deck, *house_game_index);
+        while (house_turn && should_house_hit(house_deck_score)) {
+            copy_card_between_decks(game_deck, game_deck_index, house_deck, house_game_index);
+            house_deck_score = get_deck_score(house_deck, *house_game_index);
+        }
+
+        char *house_deck_string;
+        if (house_turn || has_blackjack(house_deck_score)) {
+            house_deck_string = alloc_deck_string();
+            deck_to_string(house_deck, *house_game_index, house_deck_string);
+        } else {
+            //+1 to account for spaces
             house_deck_string = calloc(MAX_CARD_STRING_LENGTH + 3, 1);
             struct card first_house_card = house_deck[0];
             char first_card_string[MAX_CARD_STRING_LENGTH];
             card_to_string(first_house_card, first_card_string);
             strcpy(house_deck_string, first_card_string);
             strcat(house_deck_string, " ?");
-        } else {
-            //+1 to account for spaces
-            house_deck_string = alloc_deck_string();
-            deck_to_string(house_deck, *house_game_index, house_deck_string);
+        }
+
+        if (house_turn) {
+            state = FINISH;
         }
 
         printf("House hand: %s\n", house_deck_string);
         free(house_deck_string);
 
-        char* player_deck_string = alloc_deck_string();
+        char *player_deck_string = alloc_deck_string();
         deck_to_string(player_deck, *player_deck_index, player_deck_string);
 
-        struct deck_score score = get_deck_score(player_deck, *player_deck_index);
+        struct deck_score player_deck_score = get_deck_score(player_deck, *player_deck_index);
 
-        char* score_string = calloc(20, 1);
-        if(score.score == score.alt_score || score.alt_score > MAX_SCORE) {
-            itoa(score.score, score_string, 10);
+        char *score_string = calloc(20, 1);
+        if (player_deck_score.score == player_deck_score.alt_score || player_deck_score.alt_score > BLACKJACK) {
+            itoa(player_deck_score.score, score_string, 10);
         } else {
-            itoa(score.score, score_string, 10);
+            itoa(player_deck_score.score, score_string, 10);
             char alt_score_string[3];
-            itoa(score.alt_score, alt_score_string, 10);
+            itoa(player_deck_score.alt_score, alt_score_string, 10);
             strcat(score_string, " or ");
             strcat(score_string, alt_score_string);
         }
@@ -99,23 +119,27 @@ int main() {
         free(player_deck_string);
         free(score_string);
 
-        if(score.score > MAX_SCORE && score.alt_score > MAX_SCORE) {
-            printf("Your score exceeded %i therefore you lose!", MAX_SCORE);
+
+        if (state == PLAYERS_TURN) {
+            if (player_deck_score.score > BLACKJACK && player_deck_score.alt_score > BLACKJACK) {
+                printf("Your score exceeded %i therefore you lose!", BLACKJACK);
+                break;
+            }
+
+            printf("Enter 'h' for another card or 's' to stand:");
+
+            char input[3];
+            get_input_discard_overflow(input, 3);
+            char option = input[0];
+
+            if (option == 'h') {
+                copy_card_between_decks(game_deck, game_deck_index, player_deck, player_deck_index);
+            } else if (option == 's') {
+                state = HOUSE_TURN;
+            }
+        } else if(state == FINISH) {
             break;
         }
-
-        printf("Enter 'h' for another card or 's' to stand:");
-
-        char input[3];
-        get_input_discard_overflow(input, 3);
-        char option = input[0];
-
-        fflush(stdout);
-        if(option == 'h') {
-            copy_card_between_decks(game_deck, game_deck_index, player_deck, player_deck_index);
-        }
-
-        game_round++;
     }
 
     return 0;
