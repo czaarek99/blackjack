@@ -47,31 +47,38 @@ void require_input(void* input, short input_size,
     }
 }
 
-int main() {
-    const short input_size = 10;
-    char input[input_size];
+bool verify_deck_count(char* input, void* verified_input) {
+    int deck_count = strtol(input, NULL, 10);
+    if (deck_count != LONG_MAX && deck_count != LONG_MIN && deck_count != 0 && deck_count <= MAX_DECKS) {
+        *(int*)(verified_input) = deck_count;
+        return true;
+    } else {
+        return false;
+    }
+}
 
+void on_deck_bad_input(char* bad_input) {
+    printf("Please enter a valid number between 1 and %d:", MAX_DECKS);
+}
+
+void on_deck_good_input(void* good_input) {
+    long deck_count = *(long*)(good_input);
+    printf("Starting blackjack with %lu decks\n", deck_count);
+}
+
+int main() {
     setbuf(stdout, 0);
     printf("Welcome to blackjack!\n");
     printf("Please enter how many decks you'd like to play with (max %d):", MAX_DECKS);
 
-    bool hasDecks = false;
-    long deck_count = 0;
-    while (!hasDecks) {
-        get_input_discard_overflow(input, input_size);
+    int* deck_count = malloc(sizeof(int));
+    require_input(deck_count, 10, &verify_deck_count,
+            &on_deck_bad_input, &on_deck_good_input);
 
-        deck_count = strtol(input, NULL, 10);
-        if (deck_count == LONG_MAX || deck_count == LONG_MIN || deck_count == 0 || deck_count > MAX_DECKS) {
-            printf("Please enter a valid number between 1 and %d:", MAX_DECKS);
-        } else {
-            hasDecks = true;
-            printf("Starting blackjack with %lu decks\n", deck_count);
-        }
-    }
-
-    deck game_deck = make_deck(CARDS_IN_DECK * deck_count);
-    generate_deck(game_deck, deck_count);
-    shuffle_deck(game_deck, deck_count);
+    deck game_deck = make_deck(CARDS_IN_DECK * *deck_count);
+    generate_deck(game_deck, *deck_count);
+    shuffle_deck(game_deck, *deck_count);
+    free(deck_count);
 
     int *game_deck_index = malloc(sizeof(int));
     *game_deck_index = 0;
