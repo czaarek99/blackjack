@@ -158,41 +158,59 @@ void play_hand(long deck_count, int *player_money) {
         if (state == PLAYERS_TURN) {
             if (player_deck_score.score > BLACKJACK && player_deck_score.alt_score > BLACKJACK) {
                 printf("Your score exceeded %i therefore you lose!\n", BLACKJACK);
-                break;
+                state = FINISH;
             } else if (house_has_blackjack && !player_has_blackjack) {
                 printf("Dealer has blackjack and you don't! You lose!\n");
-                break;
+                state = FINISH;
+            } else {
+                printf("Enter 'h' for another card or 's' to stand:");
+
+                char game_action = require_single_letter_input(&verify_game_action,
+                                                               &on_game_action_bad_input, &on_game_action_good_input);
+
+                if (game_action == 'h') {
+                    copy_card_between_decks(game_deck, game_deck_index, player_deck, player_deck_index);
+                } else if (game_action == 's') {
+                    state = HOUSE_TURN;
+                }
             }
-
-            printf("Enter 'h' for another card or 's' to stand:");
-
-            char game_action = require_single_letter_input(&verify_game_action,
-                    &on_game_action_bad_input, &on_game_action_good_input);
-
-            if (game_action == 'h') {
-                copy_card_between_decks(game_deck, game_deck_index, player_deck, player_deck_index);
-            } else if (game_action == 's') {
-                state = HOUSE_TURN;
-            }
-        } else if(house_turn) {
+        } else if (house_turn) {
             enum better_deck winner = compare_decks(house_deck,
-                    *house_game_index, player_deck, *player_deck_index);
-            if(winner == FIRST) {
+                                                    *house_game_index, player_deck, *player_deck_index);
+            if (winner == FIRST) {
                 printf("House has better hand. You lose!\n");
-            } else if(winner == SECOND) {
+            } else if (winner == SECOND) {
                 printf("You have a better hand. You win!\n");
-                *player_money = *player_money + (int)(*player_bet * 1.5);
+                *player_money = *player_money + (int) (*player_bet * 1.5);
             } else {
                 printf("Tie!\n");
                 *player_money = *player_money + *player_bet;
             }
 
-            printf("You now have $%i\n", *player_money);
             state = FINISH;
+        }
+
+        if(state == FINISH) {
+            printf("You now have $%i\n", *player_money);
         }
     }
 
     free(player_bet);
+}
+
+SINGLE_LETTER_VERIFY_FUNC("pq", verify_continue_game)
+
+void on_continue_game_bad_input(char *bad_input) {
+    printf("Enter 'p' to keep playing enter 'q' to quit.");
+}
+
+void on_continue_game_good_input(void *good_input) {
+    char good_input_char = good_input_to_char(good_input);
+    if (good_input_char == 'q') {
+        printf("Thanks for playing! Quitting\n");
+    } else if (good_input_char == 'p') {
+        printf("Let's keep playing!\n");
+    }
 }
 
 int main() {
@@ -207,7 +225,19 @@ int main() {
     int *player_money = malloc(sizeof(int));
     *player_money = START_MONEY;
 
-    play_hand(*deck_count, player_money);
+    while (true) {
+        play_hand(*deck_count, player_money);
+
+        printf("Would you like to keep playing?\n");
+        printf("Enter 'q' to quit or 'p' to continue the game:");
+
+        char char_input = require_single_letter_input(&verify_continue_game,
+                                                      &on_continue_game_bad_input, &on_continue_game_good_input);
+        if (char_input == 'q') {
+            break;
+        }
+    }
+
     free(deck_count);
     free(player_money);
 
