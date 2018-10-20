@@ -1,4 +1,3 @@
-//TODO: deck randomization is very bad. Fix that
 #include "deck.h"
 #include "util.h"
 #include <time.h>
