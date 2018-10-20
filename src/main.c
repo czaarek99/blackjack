@@ -101,6 +101,8 @@ void play_hand(long deck_count, int *player_money) {
     require_input(player_bet, 10, &verify_bet, player_money,
                   &on_bet_bad_input, &on_bet_good_input);
 
+    *player_money -= *player_bet;
+
     enum game_state state = PLAYERS_TURN;
     while (state != FINISH) {
         printf("-----\n");
@@ -128,10 +130,6 @@ void play_hand(long deck_count, int *player_money) {
             strcat(house_deck_string, " ?");
         }
 
-        if (house_turn) {
-            state = FINISH;
-        }
-
         printf("House hand: %s\n", house_deck_string);
         free(house_deck_string);
 
@@ -155,8 +153,9 @@ void play_hand(long deck_count, int *player_money) {
         free(player_deck_string);
         free(score_string);
 
+        bool player_has_blackjack = has_blackjack(player_deck_score);
+
         if (state == PLAYERS_TURN) {
-            bool player_has_blackjack = has_blackjack(player_deck_score);
             if (player_deck_score.score > BLACKJACK && player_deck_score.alt_score > BLACKJACK) {
                 printf("Your score exceeded %i therefore you lose!", BLACKJACK);
                 break;
@@ -175,8 +174,21 @@ void play_hand(long deck_count, int *player_money) {
             } else if (game_action == 's') {
                 state = HOUSE_TURN;
             }
+        } else if(house_turn) {
+            enum better_deck winner = compare_decks(house_deck,
+                    *house_game_index, player_deck, *player_deck_index);
+            if(winner == FIRST) {
+                printf("House has better hand. You lose!\n");
+            } else if(winner == SECOND) {
+                printf("You have a better hand. You win!\n");
+                *player_money = *player_money + (int)(*player_bet * 1.5);
+            } else {
+                printf("Tie!\n");
+                *player_money = *player_money + *player_bet;
+            }
 
-            free(game_action);
+            printf("You now have $%i\n", *player_money);
+            state = FINISH;
         }
     }
 
