@@ -54,7 +54,10 @@ struct deck_score get_deck_score(deck deck, int deck_size) {
         struct card card = deck[i];
         if(card.value == CARD_ACE) {
             score.score += 1;
-            score.alt_score += 14;
+            score.alt_score += 11;
+        } else if(card.value > 9) {
+            score.score += 10;
+            score.alt_score += 10;
         } else {
             score.score += card.value;
             score.alt_score += card.value;
