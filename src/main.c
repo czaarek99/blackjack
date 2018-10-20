@@ -45,7 +45,7 @@ void on_game_action_bad_input(char *bad_input) {
 }
 
 void on_game_action_good_input(void *good_input) {
-    char good_input_char = ((char *) (good_input))[0];
+    char good_input_char = good_input_to_char(good_input);
     if (good_input_char == 'h') {
         printf("Hit! Giving you another card.\n");
     } else if (good_input_char == 's') {
