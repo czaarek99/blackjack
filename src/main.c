@@ -7,11 +7,11 @@
 
 const int MAX_DECKS = 6;
 const int DEALER_MAX_DRAW_SCORE = 17;
+const int START_MONEY = 200;
 
 enum game_state {
     PLAYERS_TURN, HOUSE_TURN, FINISH
 };
-
 
 bool should_house_hit(struct deck_score score) {
     bool draw_on_alt_score = score.score > BLACKJACK && score.score < DEALER_MAX_DRAW_SCORE;
