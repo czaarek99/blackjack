@@ -38,10 +38,7 @@ void on_deck_good_input(void *good_input) {
     printf("Starting blackjack with %lu decks\n", deck_count);
 }
 
-bool verify_game_action(char *input, void *verified_input,
-                        void *verification_data) {
-    return verify_single_letter_action("hs", input, verified_input);
-}
+SINGLE_LETTER_VERIFY_FUNC("hs", verify_game_action)
 
 void on_game_action_bad_input(char *bad_input) {
     printf("Please enter either 'h' to hit or 's' to stand:");

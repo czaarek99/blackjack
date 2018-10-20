@@ -2,7 +2,11 @@
 #define INPUT_H
 #include <stdbool.h>
 
-#
+#define SINGLE_LETTER_VERIFY_FUNC(LETTERS, FUNC_NAME)  \
+    bool (FUNC_NAME)(char *input, void *verified_input, void *verification_data) { \
+        return verify_single_letter_action((LETTERS), input, verified_input); \
+    } \
+
 
 typedef bool (*verify_input_func)(char*, void*, void*);
 typedef void (*on_bad_input_func)(char*);
