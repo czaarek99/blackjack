@@ -54,3 +54,7 @@ char require_single_letter_input(verify_input_func verify_func,
     free(input);
     return input_char;
 }
+
+char good_input_to_char(void* good_input) {
+    return ((char *) (good_input))[0];
+}

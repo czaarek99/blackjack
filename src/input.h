@@ -12,7 +12,6 @@ typedef bool (*verify_input_func)(char*, void*, void*);
 typedef void (*on_bad_input_func)(char*);
 typedef void (*on_good_input_func)(void*);
 
-
 void require_input(void* input, short text_input_size,
         verify_input_func verify_func,
         void* verification_data,
@@ -26,5 +25,7 @@ bool verify_single_letter_action(char *allowed,
 char require_single_letter_input(verify_input_func verify_func,
         on_bad_input_func bad_input_func,
         on_good_input_func good_input_func);
+
+char good_input_to_char(void* good_input);
 
 #endif
