@@ -18,7 +18,8 @@ bool should_house_hit(struct deck_score score) {
     return score.score < DEALER_MAX_DRAW_SCORE || draw_on_alt_score;
 }
 
-bool verify_deck_count(char* input, void* verified_input) {
+bool verify_deck_count(char* input,
+        void* verified_input, void* verification_data) {
     int deck_count = strtol(input, NULL, 10);
     if (deck_count != LONG_MAX && deck_count != LONG_MIN && deck_count != 0 && deck_count <= MAX_DECKS) {
         *(int*)(verified_input) = deck_count;
@@ -37,7 +38,8 @@ void on_deck_good_input(void* good_input) {
     printf("Starting blackjack with %lu decks\n", deck_count);
 }
 
-bool verify_game_action(char* input, void* verified_input) {
+bool verify_game_action(char* input, void* verified_input,
+        void* verification_data) {
     if(input[0] == 'h' || input[0] == 's') {
         ((char*) verified_input)[0] = input[0];
         return true;
@@ -61,11 +63,11 @@ void on_game_action_good_input(void* good_input) {
 
 int main() {
     setbuf(stdout, 0);
-    printf("Welcome to blackjack!\n");
-    printf("Please enter how many decks you'd like to play with (max %d):", MAX_DECKS);
+    printf("Welcome to blackjack!\nYou start with $%i.\n", START_MONEY);
+    printf("Please enter how many decks you'd like to play with (max %i):", MAX_DECKS);
 
     long* deck_count = malloc(sizeof(int));
-    require_input(deck_count, 10, &verify_deck_count,
+    require_input(deck_count, 10, NULL, &verify_deck_count,
             &on_deck_bad_input, &on_deck_good_input);
 
     deck game_deck = make_deck(CARDS_IN_DECK * *deck_count);
@@ -156,7 +158,7 @@ int main() {
             printf("Enter 'h' for another card or 's' to stand:");
 
             char* game_action = malloc(1);
-            require_input(game_action, 4, &verify_game_action,
+            require_input(game_action, 4, &verify_game_action, NULL,
                     &on_game_action_bad_input, &on_game_action_good_input);
 
             if (game_action[0] == 'h') {
