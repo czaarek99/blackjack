@@ -20,7 +20,7 @@ bool should_house_hit(struct deck_score score) {
 
 bool verify_deck_count(char *input,
                        void *verified_input, void *verification_data) {
-    int deck_count = strtol(input, NULL, 10);
+    long deck_count = strtol(input, NULL, 10);
     if (deck_count != LONG_MAX && deck_count != LONG_MIN && deck_count != 0 && deck_count <= MAX_DECKS) {
         *(int *) (verified_input) = deck_count;
         return true;
